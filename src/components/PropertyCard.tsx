@@ -1,7 +1,8 @@
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { Heart, Camera } from "lucide-react";
 
 export interface PropertyData {
   id: string;
@@ -40,74 +41,79 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
 
   // Status color
   const statusColors = {
-    "Available": "bg-green-50 text-green-600 border-green-200",
-    "Pending": "bg-amber-50 text-amber-600 border-amber-200",
-    "Under Contract": "bg-blue-50 text-blue-600 border-blue-200",
-    "Sold": "bg-slate-50 text-slate-600 border-slate-200"
+    "Available": "bg-green-100 text-green-700 border-green-200",
+    "Pending": "bg-amber-100 text-amber-700 border-amber-200",
+    "Under Contract": "bg-blue-100 text-blue-700 border-blue-200",
+    "Sold": "bg-slate-100 text-slate-700 border-slate-200"
   };
 
   // Risk color
   const riskColors = {
-    "Low": "bg-green-50 text-green-600 border-green-200",
-    "Moderate": "bg-amber-50 text-amber-600 border-amber-200",
-    "High": "bg-rose-50 text-rose-600 border-rose-200"
+    "Low": "bg-green-100 text-green-700",
+    "Moderate": "bg-amber-100 text-amber-700",
+    "High": "bg-rose-100 text-rose-700"
   };
 
   // Type color
   const typeColors = {
-    "Fix & Flip": "bg-purple-50 text-purple-600 border-purple-200",
-    "Buy & Hold": "bg-blue-50 text-blue-600 border-blue-200",
-    "Rental": "bg-teal-50 text-teal-600 border-teal-200"
+    "Fix & Flip": "bg-purple-100 text-purple-700",
+    "Buy & Hold": "bg-blue-100 text-blue-700",
+    "Rental": "bg-teal-100 text-teal-700"
   };
 
   return (
     <Link to={`/properties/${id}`} className="block">
-      <Card className="h-full overflow-hidden property-card-hover border-slate-200">
-        <div className="relative h-48 overflow-hidden">
-          <div className={`absolute top-2 right-2 z-10 px-2 py-1 text-xs font-medium rounded ${statusColors[status]}`}>
-            {status}
+      <Card className="zillow-card h-full">
+        <div className="relative">
+          <div className="absolute top-2 left-2 z-10">
+            <div className={`tag-pill ${statusColors[status]}`}>
+              {status}
+            </div>
           </div>
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover"
-          />
+          <div className="absolute top-2 right-2 z-10 flex gap-2">
+            <button className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center hover:text-primary transition-colors">
+              <Heart className="h-4 w-4" />
+            </button>
+            <div className="h-8 px-2 rounded-full bg-white shadow-sm flex items-center justify-center text-xs font-medium">
+              <Camera className="h-3 w-3 mr-1" /> 12
+            </div>
+          </div>
+          <div className="h-48 overflow-hidden">
+            <img
+              src={image}
+              alt={title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent h-16"></div>
+          <div className="absolute bottom-2 left-2">
+            <span className="font-semibold text-lg text-white">${price.toLocaleString()}</span>
+          </div>
         </div>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start gap-2 mb-2">
-            <h3 className="font-medium text-lg line-clamp-1">{title}</h3>
-            <span className="font-semibold text-primary whitespace-nowrap">
-              ${price.toLocaleString()}
-            </span>
+        <div className="p-4">
+          <div className="mb-1">
+            <h3 className="font-medium text-lg">{title}</h3>
+            <p className="text-sm text-slate-600 line-clamp-1">{address}</p>
           </div>
-          <p className="text-sm text-slate-600 mb-3 line-clamp-1">{address}</p>
           
-          <div className="flex items-center text-sm text-slate-700 mb-3 gap-3">
-            <div>
-              <span className="font-medium">{beds}</span> bed
-            </div>
-            <div className="h-4 w-px bg-slate-200"></div>
-            <div>
-              <span className="font-medium">{baths}</span> bath
-            </div>
-            <div className="h-4 w-px bg-slate-200"></div>
-            <div>
-              <span className="font-medium">{sqft.toLocaleString()}</span> sqft
-            </div>
+          <div className="flex items-center text-sm text-slate-700 my-3 gap-4">
+            <div className="font-semibold">{beds} <span className="text-slate-500 font-normal">beds</span></div>
+            <div className="font-semibold">{baths} <span className="text-slate-500 font-normal">baths</span></div>
+            <div className="font-semibold">{sqft.toLocaleString()} <span className="text-slate-500 font-normal">sqft</span></div>
           </div>
 
           <div className="flex gap-2 flex-wrap">
-            <Badge variant="outline" className={typeColors[type]}>
+            <Badge variant="outline" className={`tag-pill ${typeColors[type]}`}>
               {type}
             </Badge>
-            <Badge variant="outline" className={riskColors[risk]}>
+            <Badge variant="outline" className={`tag-pill ${riskColors[risk]}`}>
               {risk} Risk
             </Badge>
-            <Badge variant="outline" className="bg-sky-50 text-sky-600 border-sky-200">
+            <Badge variant="outline" className="tag-pill bg-sky-100 text-sky-700">
               {roi}% ROI
             </Badge>
           </div>
-        </CardContent>
+        </div>
       </Card>
     </Link>
   );
