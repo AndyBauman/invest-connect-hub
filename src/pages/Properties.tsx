@@ -2,11 +2,35 @@
 import Navbar from "@/components/Navbar";
 import FeaturedProperties from "@/components/FeaturedProperties";
 import { Button } from "@/components/ui/button";
-import { Filter, GridIcon, ListBulletIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Filter, Grid, List, Search, X } from "lucide-react";
 import { useState } from "react";
 
 const Properties = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  const [searchParams, setSearchParams] = useState({
+    location: "",
+    minPrice: "",
+    maxPrice: "",
+    beds: "",
+    baths: "",
+    propertyType: ""
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setSearchParams(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Here you would typically call an API with the search parameters
+    console.log("Searching with params:", searchParams);
+  };
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -21,8 +45,14 @@ const Properties = () => {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" className="gap-1">
-                <Filter className="h-4 w-4" /> Filters
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-1"
+                onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
+              >
+                {showAdvancedSearch ? <X className="h-4 w-4" /> : <Filter className="h-4 w-4" />}
+                {showAdvancedSearch ? "Close" : "Filters"}
               </Button>
               
               <div className="border rounded-md flex overflow-hidden">
@@ -30,17 +60,126 @@ const Properties = () => {
                   className={`p-2 ${viewMode === 'grid' ? 'bg-slate-100' : 'bg-white'}`}
                   onClick={() => setViewMode('grid')}
                 >
-                  <GridIcon className="h-4 w-4" />
+                  <Grid className="h-4 w-4" />
                 </button>
                 <button 
                   className={`p-2 ${viewMode === 'list' ? 'bg-slate-100' : 'bg-white'}`}
                   onClick={() => setViewMode('list')}
                 >
-                  <ListBulletIcon className="h-4 w-4" />
+                  <List className="h-4 w-4" />
                 </button>
               </div>
             </div>
           </div>
+          
+          {showAdvancedSearch && (
+            <div className="bg-white border border-slate-200 rounded-lg p-4 mb-6 shadow-sm">
+              <form onSubmit={handleSearch}>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div>
+                    <label htmlFor="location" className="block text-sm font-medium text-slate-700 mb-1">Location</label>
+                    <Input
+                      id="location"
+                      name="location"
+                      placeholder="City, Zip, or Address"
+                      value={searchParams.location}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label htmlFor="minPrice" className="block text-sm font-medium text-slate-700 mb-1">Min Price</label>
+                      <Input
+                        id="minPrice"
+                        name="minPrice"
+                        type="number"
+                        placeholder="$"
+                        value={searchParams.minPrice}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="maxPrice" className="block text-sm font-medium text-slate-700 mb-1">Max Price</label>
+                      <Input
+                        id="maxPrice"
+                        name="maxPrice"
+                        type="number"
+                        placeholder="$"
+                        value={searchParams.maxPrice}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label htmlFor="beds" className="block text-sm font-medium text-slate-700 mb-1">Beds</label>
+                      <select
+                        id="beds"
+                        name="beds"
+                        value={searchParams.beds}
+                        onChange={handleInputChange}
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      >
+                        <option value="">Any</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                        <option value="5">5+</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="baths" className="block text-sm font-medium text-slate-700 mb-1">Baths</label>
+                      <select
+                        id="baths"
+                        name="baths"
+                        value={searchParams.baths}
+                        onChange={handleInputChange}
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      >
+                        <option value="">Any</option>
+                        <option value="1">1+</option>
+                        <option value="1.5">1.5+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label htmlFor="propertyType" className="block text-sm font-medium text-slate-700 mb-1">Property Type</label>
+                    <select
+                      id="propertyType"
+                      name="propertyType"
+                      value={searchParams.propertyType}
+                      onChange={handleInputChange}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    >
+                      <option value="">Any</option>
+                      <option value="Single Family">Single Family</option>
+                      <option value="Multi-Family">Multi-Family</option>
+                      <option value="Condo">Condo</option>
+                      <option value="Townhouse">Townhouse</option>
+                      <option value="Land">Land</option>
+                      <option value="Commercial">Commercial</option>
+                    </select>
+                  </div>
+                  
+                  <div className="flex items-end justify-end">
+                    <Button type="submit" className="gap-2">
+                      <Search className="h-4 w-4" />
+                      Search Properties
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          )}
           
           <FeaturedProperties />
         </div>
