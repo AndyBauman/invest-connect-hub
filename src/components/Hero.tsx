@@ -30,24 +30,24 @@ const Hero = () => {
           </div>
           
           <div className="bg-white rounded-xl shadow-lg p-6 max-w-3xl mx-auto">
-            <div className="flex items-center mb-4">
-              <Button variant="ghost" className="rounded-full text-slate-700">
+            <div className="flex items-center mb-4 overflow-x-auto">
+              <Button variant="ghost" className="rounded-full text-slate-700 whitespace-nowrap">
                 <Building className="mr-2 h-4 w-4" /> 
                 All Properties
               </Button>
               <div className="h-6 w-px bg-slate-200 mx-2"></div>
-              <Button variant="ghost" className="rounded-full text-slate-700">
+              <Button variant="ghost" className="rounded-full text-slate-700 whitespace-nowrap">
                 <Home className="mr-2 h-4 w-4" /> 
                 Residential
               </Button>
               <div className="h-6 w-px bg-slate-200 mx-2"></div>
-              <Button variant="ghost" className="rounded-full text-slate-700">
+              <Button variant="ghost" className="rounded-full text-slate-700 whitespace-nowrap">
                 <Building className="mr-2 h-4 w-4" /> 
                 Commercial
               </Button>
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative flex-grow">
                 <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                 <input
@@ -61,8 +61,8 @@ const Hero = () => {
               </Button>
             </div>
 
-            <div className="mt-6 flex justify-between items-center">
-              <div className="text-sm text-slate-500">Popular: Austin, Miami, Nashville, Phoenix</div>
+            <div className="mt-6 flex flex-col sm:flex-row justify-between items-center">
+              <div className="text-sm text-slate-500 mb-2 sm:mb-0">Popular: Austin, Miami, Nashville, Phoenix</div>
               <Link to="/properties" className="text-sm font-medium text-primary flex items-center">
                 Advanced Search <ArrowRight className="ml-1 h-3 w-3" />
               </Link>

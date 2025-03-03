@@ -122,7 +122,7 @@ const Navbar = () => {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-slate-200 animate-fade-in">
+        <div className="md:hidden bg-white border-b border-slate-200">
           <div className="px-4 pt-2 pb-4 space-y-1">
             <Link
               to="/properties"
