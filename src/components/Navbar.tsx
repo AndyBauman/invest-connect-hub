@@ -50,7 +50,8 @@ const Navbar = () => {
                   <div className="py-1">
                     <Link to="/about" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">About Us</Link>
                     <Link to="/blog" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Blog</Link>
-                    <Link to="/help" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Help Center</Link>
+                    <Link to="/contact" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Contact</Link>
+                    <Link to="/sitemap" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Sitemap</Link>
                   </div>
                 </div>
               </div>
@@ -150,6 +151,20 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               Plans
+            </Link>
+            <Link
+              to="/about"
+              className="block py-2 px-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-md"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              About
+            </Link>
+            <Link
+              to="/contact"
+              className="block py-2 px-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-md"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact
             </Link>
             <div className="pt-4 border-t border-slate-200">
               {isLoggedIn ? (
