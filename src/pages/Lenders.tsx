@@ -211,11 +211,11 @@ const Lenders = () => {
                       onChange={(e) => setRadius(e.target.value)}
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
-                      <option value="5">5 miles</option>
                       <option value="10">10 miles</option>
-                      <option value="25">25 miles</option>
                       <option value="50">50 miles</option>
                       <option value="100">100 miles</option>
+                      <option value="200">200 miles</option>
+                      <option value="500">500 miles</option>
                     </select>
                   </div>
                 </div>
