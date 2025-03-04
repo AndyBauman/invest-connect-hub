@@ -37,6 +37,11 @@ const sitemapData: SitemapSection[] = [
         description: "Find service providers for your investment needs"
       },
       {
+        name: "Driving for Dollars",
+        path: "/driving-for-dollars",
+        description: "Drive neighborhoods to find potential investment properties"
+      },
+      {
         name: "Membership Plans",
         path: "/membership",
         description: "View and compare membership options"

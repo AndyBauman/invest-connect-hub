@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -38,6 +37,9 @@ const Navbar = () => {
               </Link>
               <Link to="/services" className="text-sm font-medium text-slate-700 hover:text-primary px-3 py-2 rounded-md transition-colors">
                 Services
+              </Link>
+              <Link to="/driving-for-dollars" className="text-sm font-medium text-slate-700 hover:text-primary px-3 py-2 rounded-md transition-colors">
+                Driving for Dollars
               </Link>
               <Link to="/membership" className="text-sm font-medium text-slate-700 hover:text-primary px-3 py-2 rounded-md transition-colors">
                 Plans
@@ -144,6 +146,13 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               Services
+            </Link>
+            <Link
+              to="/driving-for-dollars"
+              className="block py-2 px-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-md"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Driving for Dollars
             </Link>
             <Link
               to="/membership"
