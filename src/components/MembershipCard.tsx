@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { redirectToCheckout } from "@/utils/stripe";
+import { Loader2 } from "lucide-react";
 
 interface MembershipPlan {
   id: string;
@@ -27,6 +29,7 @@ const MembershipCard = ({ plan, isYearly }: MembershipCardProps) => {
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState<"none" | "half" | "free">("none");
   const [showPromoInput, setShowPromoInput] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   // Valid promo codes
@@ -77,6 +80,56 @@ const MembershipCard = ({ plan, isYearly }: MembershipCardProps) => {
         variant: "destructive"
       });
     }
+  };
+
+  const handleSubscribe = async () => {
+    if (currentPrice === 0) {
+      // Free plan - no payment needed
+      toast({
+        title: "Success!",
+        description: "You're now subscribed to the free plan.",
+        variant: "default"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // In a real app, these would be actual Stripe Price IDs for each plan
+      const stripePriceId = `price_${id}_${isYearly ? 'yearly' : 'monthly'}_${discount}`;
+      
+      const result = await redirectToCheckout({
+        priceId: stripePriceId,
+        successUrl: `${window.location.origin}/membership?success=true&plan=${id}`,
+        cancelUrl: `${window.location.origin}/membership?canceled=true`
+      });
+      
+      if (result.success) {
+        // In a real implementation, this would be handled by the redirect
+        // For demo purposes, show a toast
+        toast({
+          title: "Redirecting to Stripe",
+          description: `You're being redirected to complete your ${name} plan purchase.`,
+          variant: "default"
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "There was a problem with the checkout process. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Subscribe error:', error);
+      toast({
+        title: "Error",
+        description: "There was a problem with the checkout process. Please try again.",
+        variant: "destructive"
+      });
+    }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -175,8 +228,17 @@ const MembershipCard = ({ plan, isYearly }: MembershipCardProps) => {
           className="w-full" 
           variant={popular ? "default" : "outline"}
           size="lg"
+          onClick={handleSubscribe}
+          disabled={isLoading}
         >
-          {currentPrice === 0 ? "Get Started - Free" : popular ? "Start 7-Day Free Trial" : "Choose Plan"}
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            currentPrice === 0 ? "Get Started - Free" : popular ? "Start 7-Day Free Trial" : "Choose Plan"
+          )}
         </Button>
       </CardFooter>
     </Card>
