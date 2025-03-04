@@ -1,8 +1,7 @@
-
 import { Star, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-export type TransactionType = "Buyer" | "Seller" | "Property Manager" | "Partner" | "Lender";
+export type TransactionType = "Buyer" | "Seller" | "Property Manager" | "Partner" | "Lender" | "Agent" | "Client";
 
 export interface ReviewData {
   id: string;
@@ -48,7 +47,9 @@ const UserReviewCard = ({
     "Seller": "bg-green-100 text-green-700",
     "Property Manager": "bg-purple-100 text-purple-700",
     "Partner": "bg-amber-100 text-amber-700",
-    "Lender": "bg-sky-100 text-sky-700"
+    "Lender": "bg-sky-100 text-sky-700",
+    "Agent": "bg-indigo-100 text-indigo-700",
+    "Client": "bg-rose-100 text-rose-700"
   };
 
   const formatDate = (dateString: string) => {

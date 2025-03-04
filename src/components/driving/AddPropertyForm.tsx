@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,9 +47,6 @@ const AddPropertyForm = () => {
       
       savedProperties.push(newProperty);
       localStorage.setItem("savedProperties", JSON.stringify(savedProperties));
-      
-      // Schedule reminder checks (in a real app this would be done by a server)
-      // For demo, we'll save the reminder flags to local storage
       
       // Show success message
       toast({

@@ -1,4 +1,3 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -19,8 +18,10 @@ export interface PropertyData {
   type: "Fix & Flip" | "Buy & Hold" | "Rental";
   status: "Available" | "Pending" | "Under Contract" | "Sold";
   risk: "Low" | "Moderate" | "High";
-  createdAt?: string; // New field for posting date
-  expiresAt?: string; // New field for expiration date
+  createdAt?: string;
+  expiresAt?: string;
+  reminderSent14Days?: boolean;
+  reminderSent30Days?: boolean;
 }
 
 interface PropertyCardProps {
@@ -42,10 +43,11 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     status,
     risk,
     createdAt,
-    expiresAt
+    expiresAt,
+    reminderSent14Days,
+    reminderSent30Days
   } = property;
 
-  // Status color
   const statusColors = {
     "Available": "bg-green-100 text-green-700 border-green-200",
     "Pending": "bg-amber-100 text-amber-700 border-amber-200",
@@ -53,21 +55,18 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     "Sold": "bg-slate-100 text-slate-700 border-slate-200"
   };
 
-  // Risk color
   const riskColors = {
     "Low": "bg-green-100 text-green-700",
     "Moderate": "bg-amber-100 text-amber-700",
     "High": "bg-rose-100 text-rose-700"
   };
 
-  // Type color
   const typeColors = {
     "Fix & Flip": "bg-purple-100 text-purple-700",
     "Buy & Hold": "bg-blue-100 text-blue-700",
     "Rental": "bg-teal-100 text-teal-700"
   };
 
-  // Format date and calculate days remaining until expiration
   const formatDate = (dateString?: string) => {
     if (!dateString) return "";
     return format(new Date(dateString), "MMM d, yyyy");
@@ -88,7 +87,6 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     return isPast(fifteenDaysBeforeExpiry) && !isPast(expiry);
   };
 
-  // Handle share functionality
   const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();

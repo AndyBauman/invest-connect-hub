@@ -17,7 +17,7 @@ interface UserReviewFormProps {
 
 const UserReviewForm = ({ 
   onSubmitReview,
-  transactionTypes = ["Buyer", "Seller", "Property Manager", "Partner", "Lender"]
+  transactionTypes = ["Buyer", "Seller", "Property Manager", "Partner", "Lender", "Agent", "Client"]
 }: UserReviewFormProps) => {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
