@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Search, MapPin, ArrowRight, Building, Home } from "lucide-react";
+import { Search, MapPin, ArrowRight, Building, Home, TreePine } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -30,20 +30,25 @@ const Hero = () => {
           </div>
           
           <div className="bg-white rounded-xl shadow-lg p-6 max-w-3xl mx-auto">
-            <div className="flex items-center mb-4 overflow-x-auto">
+            <div className="flex items-center mb-4 overflow-x-auto gap-1">
               <Button variant="ghost" className="rounded-full text-slate-700 whitespace-nowrap">
                 <Building className="mr-2 h-4 w-4" /> 
                 All Properties
               </Button>
-              <div className="h-6 w-px bg-slate-200 mx-2"></div>
+              <div className="h-6 w-px bg-slate-200"></div>
               <Button variant="ghost" className="rounded-full text-slate-700 whitespace-nowrap">
                 <Home className="mr-2 h-4 w-4" /> 
                 Residential
               </Button>
-              <div className="h-6 w-px bg-slate-200 mx-2"></div>
+              <div className="h-6 w-px bg-slate-200"></div>
               <Button variant="ghost" className="rounded-full text-slate-700 whitespace-nowrap">
                 <Building className="mr-2 h-4 w-4" /> 
                 Commercial
+              </Button>
+              <div className="h-6 w-px bg-slate-200"></div>
+              <Button variant="ghost" className="rounded-full text-slate-700 whitespace-nowrap">
+                <TreePine className="mr-2 h-4 w-4" /> 
+                Land
               </Button>
             </div>
             
