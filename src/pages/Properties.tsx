@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import FeaturedProperties from "@/components/FeaturedProperties";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Filter, Grid, List, Search, X } from "lucide-react";
+import { Filter, Grid, List, Search, X, WalletCards, Key } from "lucide-react";
 import { useState } from "react";
 
 const Properties = () => {
@@ -15,7 +15,8 @@ const Properties = () => {
     maxPrice: "",
     beds: "",
     baths: "",
-    propertyType: ""
+    propertyType: "",
+    financing: [] as ("Seller Financing" | "Subject To")[]
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -24,6 +25,23 @@ const Properties = () => {
       ...prev,
       [name]: value
     }));
+  };
+
+  const handleFinancingToggle = (type: "Seller Financing" | "Subject To") => {
+    setSearchParams(prev => {
+      const currentFinancing = [...prev.financing];
+      if (currentFinancing.includes(type)) {
+        return {
+          ...prev,
+          financing: currentFinancing.filter(item => item !== type)
+        };
+      } else {
+        return {
+          ...prev,
+          financing: [...currentFinancing, type]
+        };
+      }
+    });
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -70,6 +88,27 @@ const Properties = () => {
                 </button>
               </div>
             </div>
+          </div>
+          
+          <div className="flex flex-wrap gap-2 mb-6">
+            <Button 
+              variant={searchParams.financing.includes("Seller Financing") ? "default" : "outline"}
+              size="sm" 
+              className="gap-2"
+              onClick={() => handleFinancingToggle("Seller Financing")}
+            >
+              <WalletCards className="h-4 w-4" />
+              Seller Financing
+            </Button>
+            <Button 
+              variant={searchParams.financing.includes("Subject To") ? "default" : "outline"}
+              size="sm" 
+              className="gap-2"
+              onClick={() => handleFinancingToggle("Subject To")}
+            >
+              <Key className="h-4 w-4" />
+              Subject To
+            </Button>
           </div>
           
           {showAdvancedSearch && (
@@ -170,12 +209,38 @@ const Properties = () => {
                     </select>
                   </div>
                   
-                  <div className="flex items-end justify-end">
-                    <Button type="submit" className="gap-2">
-                      <Search className="h-4 w-4" />
-                      Search Properties
-                    </Button>
+                  <div className="flex-col space-y-3">
+                    <label className="block text-sm font-medium text-slate-700">Financing Options</label>
+                    <div className="flex flex-wrap gap-2">
+                      <Button 
+                        type="button"
+                        variant={searchParams.financing.includes("Seller Financing") ? "default" : "outline"} 
+                        size="sm"
+                        className="gap-2"
+                        onClick={() => handleFinancingToggle("Seller Financing")}
+                      >
+                        <WalletCards className="h-4 w-4" />
+                        Seller Financing
+                      </Button>
+                      <Button 
+                        type="button"
+                        variant={searchParams.financing.includes("Subject To") ? "default" : "outline"} 
+                        size="sm"
+                        className="gap-2"
+                        onClick={() => handleFinancingToggle("Subject To")}
+                      >
+                        <Key className="h-4 w-4" />
+                        Subject To
+                      </Button>
+                    </div>
                   </div>
+                </div>
+                
+                <div className="flex justify-end">
+                  <Button type="submit" className="gap-2">
+                    <Search className="h-4 w-4" />
+                    Search Properties
+                  </Button>
                 </div>
               </form>
             </div>
