@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -72,16 +71,12 @@ const Services = () => {
   const [radius, setRadius] = useState("10");
   const [showFilters, setShowFilters] = useState(false);
   
-  // Filter services based on location and areas served
   const filteredServices = servicesData.filter(service => {
     const matchesLocation = service.location.toLowerCase().includes(providerLocation.toLowerCase());
     const matchesAreaServed = service.areasServed.some(area => 
       area.toLowerCase().includes(areaServed.toLowerCase())
     ) || (service.areasServed.includes("Nationwide") && areaServed);
     
-    // For now, we're not implementing actual zip code radius search logic
-    // as it would require geolocation data and distance calculation
-    // We'll just show all results if no other filters are applied when zip is entered
     const matchesZipRadius = !zipCode || zipCode === "";
     
     return (!providerLocation || matchesLocation) && 
@@ -181,11 +176,11 @@ const Services = () => {
                       onChange={(e) => setRadius(e.target.value)}
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
-                      <option value="5">5 miles</option>
                       <option value="10">10 miles</option>
-                      <option value="25">25 miles</option>
                       <option value="50">50 miles</option>
                       <option value="100">100 miles</option>
+                      <option value="200">200 miles</option>
+                      <option value="500">500 miles</option>
                     </select>
                   </div>
                 </div>
