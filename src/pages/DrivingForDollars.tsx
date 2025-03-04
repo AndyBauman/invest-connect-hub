@@ -7,13 +7,44 @@ import {
   Car, Compass, Eye, Home, Building,
   Clipboard, MicIcon, CloudOff, LocateFixed
 } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
+import { Link } from "react-router-dom";
 
 const DrivingForDollars = () => {
+  // Start driving function 
+  const handleStartDriving = () => {
+    toast({
+      title: "Driving Mode Activated",
+      description: "GPS tracking has started. Drive safely!",
+    });
+  };
+
+  // Virtual driving function
+  const handleVirtualDriving = () => {
+    toast({
+      title: "Virtual Mode Activated",
+      description: "You can now scout properties virtually",
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
       <main className="flex-1 pt-20">
+        {/* Access Banner - helping users find this page */}
+        <section className="bg-amber-50 border-b border-amber-200">
+          <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-amber-800">
+              <Route className="h-5 w-5" />
+              <span className="text-sm md:text-base">
+                <strong>Quick Tip:</strong> Access Driving for Dollars directly at <code className="bg-white px-2 py-1 rounded text-amber-700">/driving-for-dollars</code> or from the footer navigation
+              </span>
+            </div>
+            <Link to="/" className="text-sm text-amber-700 font-medium hover:underline">Back to Home</Link>
+          </div>
+        </section>
+        
         {/* Hero Section */}
         <section className="bg-gradient-to-b from-slate-900 to-slate-800 text-white py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,10 +54,10 @@ const DrivingForDollars = () => {
                 Find off-market properties and potential deals while driving through neighborhoods
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Button size="lg" className="gap-2">
+                <Button size="lg" className="gap-2" onClick={handleStartDriving}>
                   <Car className="h-5 w-5" /> Start Driving
                 </Button>
-                <Button size="lg" variant="outline" className="gap-2 bg-slate-800 hover:bg-slate-700">
+                <Button size="lg" variant="outline" className="gap-2 bg-slate-800 hover:bg-slate-700" onClick={handleVirtualDriving}>
                   <Eye className="h-5 w-5" /> Virtual Driving
                 </Button>
               </div>
