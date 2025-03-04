@@ -1,8 +1,33 @@
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Map, Locate, Route, MicIcon } from "lucide-react";
 
 const MapPreview = () => {
+  const [propertiesCount, setPropertiesCount] = useState(0);
+  
+  useEffect(() => {
+    // Get the initial count from localStorage
+    const savedProperties = JSON.parse(localStorage.getItem("savedProperties") || "[]");
+    setPropertiesCount(savedProperties.length);
+    
+    // Set up an event listener for storage changes
+    const handleStorageChange = () => {
+      const properties = JSON.parse(localStorage.getItem("savedProperties") || "[]");
+      setPropertiesCount(properties.length);
+    };
+    
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Also set up a custom event listener for changes made within this tab
+    window.addEventListener("propertiesUpdated", handleStorageChange);
+    
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("propertiesUpdated", handleStorageChange);
+    };
+  }, []);
+
   return (
     <div className="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden border border-slate-200">
       <div className="relative h-[500px] w-full bg-slate-200">
@@ -34,7 +59,7 @@ const MapPreview = () => {
           </div>
           <div>
             <p className="text-sm text-slate-500">Properties Marked</p>
-            <p className="font-medium">0</p>
+            <p className="font-medium">{propertiesCount}</p>
           </div>
           <div>
             <p className="text-sm text-slate-500">Distance Covered</p>
