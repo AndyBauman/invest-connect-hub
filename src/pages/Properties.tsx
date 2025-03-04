@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import FeaturedProperties from "@/components/FeaturedProperties";
 import { Button } from "@/components/ui/button";
@@ -46,7 +45,6 @@ const Properties = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically call an API with the search parameters
     console.log("Searching with params:", searchParams);
   };
   
@@ -88,27 +86,6 @@ const Properties = () => {
                 </button>
               </div>
             </div>
-          </div>
-          
-          <div className="flex flex-wrap gap-2 mb-6">
-            <Button 
-              variant={searchParams.financing.includes("Seller Financing") ? "default" : "outline"}
-              size="sm" 
-              className="gap-2"
-              onClick={() => handleFinancingToggle("Seller Financing")}
-            >
-              <WalletCards className="h-4 w-4" />
-              Seller Financing
-            </Button>
-            <Button 
-              variant={searchParams.financing.includes("Subject To") ? "default" : "outline"}
-              size="sm" 
-              className="gap-2"
-              onClick={() => handleFinancingToggle("Subject To")}
-            >
-              <Key className="h-4 w-4" />
-              Subject To
-            </Button>
           </div>
           
           {showAdvancedSearch && (

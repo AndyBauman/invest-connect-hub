@@ -2,7 +2,7 @@
 import { useState } from "react";
 import PropertyCard, { PropertyData } from "./PropertyCard";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Building, Home, Landmark } from "lucide-react";
+import { ChevronRight, Building, Home, Landmark, WalletCards, Key } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // Sample property data
@@ -52,11 +52,13 @@ const sampleProperties: PropertyData[] = [
 ];
 
 const FeaturedProperties = () => {
-  const [category, setCategory] = useState<"all" | "Fix & Flip" | "Buy & Hold" | "Rental">("all");
+  const [category, setCategory] = useState<"all" | "Fix & Flip" | "Buy & Hold" | "Rental" | "Seller Financing" | "Subject To">("all");
   
   const filteredProperties = category === "all" 
     ? sampleProperties 
-    : sampleProperties.filter(prop => prop.type === category);
+    : category === "Seller Financing" || category === "Subject To"
+      ? sampleProperties // For demo purposes, show all properties when financing options are selected
+      : sampleProperties.filter(prop => prop.type === category);
 
   return (
     <section className="py-20 bg-white">
@@ -99,6 +101,22 @@ const FeaturedProperties = () => {
               className="whitespace-nowrap"
             >
               <Building className="mr-1 h-4 w-4" /> Rental
+            </Button>
+            <Button 
+              variant={category === "Seller Financing" ? "default" : "outline"} 
+              size="sm"
+              onClick={() => setCategory("Seller Financing")}
+              className="whitespace-nowrap"
+            >
+              <WalletCards className="mr-1 h-4 w-4" /> Seller Financing
+            </Button>
+            <Button 
+              variant={category === "Subject To" ? "default" : "outline"} 
+              size="sm"
+              onClick={() => setCategory("Subject To")}
+              className="whitespace-nowrap"
+            >
+              <Key className="mr-1 h-4 w-4" /> Subject To
             </Button>
           </div>
         </div>
