@@ -2,7 +2,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Heart, Camera } from "lucide-react";
+import { Heart, Camera, Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 export interface PropertyData {
   id: string;
@@ -61,6 +62,38 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     "Rental": "bg-teal-100 text-teal-700"
   };
 
+  const handleShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const shareUrl = `${window.location.origin}/properties/${id}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: `Investment Property: ${title}`,
+        text: `Check out this investment property with ${roi}% ROI!`,
+        url: shareUrl,
+      })
+      .catch(error => {
+        console.error('Error sharing:', error);
+        copyToClipboard(shareUrl);
+      });
+    } else {
+      copyToClipboard(shareUrl);
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        toast.success("Property link copied to clipboard!");
+      })
+      .catch(err => {
+        console.error('Failed to copy: ', err);
+        toast.error("Failed to copy link");
+      });
+  };
+
   return (
     <Link to={`/properties/${id}`} className="block">
       <Card className="zillow-card h-full">
@@ -71,8 +104,21 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             </div>
           </div>
           <div className="absolute top-2 right-2 z-10 flex gap-2">
-            <button className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center hover:text-primary transition-colors">
+            <button 
+              className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center hover:text-primary transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
               <Heart className="h-4 w-4" />
+            </button>
+            <button 
+              className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center hover:text-primary transition-colors"
+              onClick={handleShare}
+              aria-label="Share property"
+            >
+              <Share2 className="h-4 w-4" />
             </button>
             <div className="h-8 px-2 rounded-full bg-white shadow-sm flex items-center justify-center text-xs font-medium">
               <Camera className="h-3 w-3 mr-1" /> 12
