@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Filter, Star, ArrowUpRight, Landmark, Building, Briefcase, MapPin, Target } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 const lendersData = [
   {
@@ -13,6 +14,7 @@ const lendersData = [
     name: "BlueRidge Capital",
     logo: "https://images.unsplash.com/photo-1560472355-536de3962603?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80",
     type: "Hard Money",
+    lenderCategory: ["Portfolio Lenders", "Hard Money Lenders"],
     description: "Short-term loans for fix & flip projects with fast closing times.",
     interestRate: "8.5-12%",
     ltv: "Up to 75%",
@@ -30,6 +32,7 @@ const lendersData = [
     name: "Horizon Funding",
     logo: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80",
     type: "Conventional",
+    lenderCategory: ["Retail Lenders", "Direct Lenders"],
     description: "Traditional mortgage loans for long-term buy & hold investments.",
     interestRate: "5.75-7.25%",
     ltv: "Up to 80%",
@@ -47,6 +50,7 @@ const lendersData = [
     name: "Urban Investment Group",
     logo: "https://images.unsplash.com/photo-1579389083078-4e7018379f7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80",
     type: "Private",
+    lenderCategory: ["Portfolio Lenders", "Creative Lending"],
     description: "Flexible financing solutions for experienced real estate investors.",
     interestRate: "9-14%",
     ltv: "Up to 90%",
@@ -61,14 +65,36 @@ const lendersData = [
   },
 ];
 
+// Lender category options for filtering
+const lenderCategories = [
+  "Direct Lenders",
+  "Retail Lenders",
+  "Wholesale Lenders",
+  "Portfolio Lenders",
+  "Warehouse Lenders",
+  "Online Lenders",
+  "Hard Money Lenders",
+  "Creative Lending"
+];
+
 const Lenders = () => {
   const [locationFilter, setLocationFilter] = useState("");
   const [statesFilter, setStatesFilter] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [radius, setRadius] = useState("10");
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedLenderCategories, setSelectedLenderCategories] = useState<string[]>([]);
   
-  // Filter lenders based on location and states served
+  // Toggle lender category selection
+  const toggleLenderCategory = (category: string) => {
+    setSelectedLenderCategories(prev => 
+      prev.includes(category)
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+  
+  // Filter lenders based on location, states served, and lender categories
   const filteredLenders = lendersData.filter(lender => {
     const matchesLocation = lender.location.toLowerCase().includes(locationFilter.toLowerCase());
     const matchesStates = lender.states.some(state => 
@@ -77,12 +103,18 @@ const Lenders = () => {
     
     // For now, we're not implementing actual zip code radius search logic
     // as it would require geolocation data and distance calculation
-    // We'll just show all results if no other filters are applied when zip is entered
     const matchesZipRadius = !zipCode || zipCode === "";
+    
+    // Check if the lender matches any selected category
+    const matchesCategory = selectedLenderCategories.length === 0 || 
+      selectedLenderCategories.some(category => 
+        lender.lenderCategory.includes(category)
+      );
     
     return (!locationFilter || matchesLocation) && 
            (!statesFilter || matchesStates) &&
-           matchesZipRadius;
+           matchesZipRadius &&
+           matchesCategory;
   });
 
   const handleClearFilters = () => {
@@ -90,6 +122,7 @@ const Lenders = () => {
     setStatesFilter("");
     setZipCode("");
     setRadius("10");
+    setSelectedLenderCategories([]);
   };
 
   return (
@@ -187,6 +220,29 @@ const Lenders = () => {
                   </div>
                 </div>
               </div>
+              
+              {/* Lender Type Filter */}
+              <div className="mt-4">
+                <h3 className="text-sm font-medium text-slate-700 mb-3">Lender Types</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {lenderCategories.map((category) => (
+                    <div 
+                      key={category}
+                      className={`
+                        flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer border text-sm
+                        ${selectedLenderCategories.includes(category) 
+                          ? 'bg-primary text-primary-foreground border-primary' 
+                          : 'bg-background border-input hover:bg-accent hover:text-accent-foreground'}
+                      `}
+                      onClick={() => toggleLenderCategory(category)}
+                    >
+                      <Briefcase className="h-3.5 w-3.5" />
+                      <span>{category}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
               <div className="mt-4 flex justify-end">
                 <Button 
                   variant="outline" 
@@ -217,10 +273,15 @@ const Lenders = () => {
                         <div className="flex items-start justify-between">
                           <div>
                             <h3 className="text-xl font-semibold">{lender.name}</h3>
-                            <div className="flex items-center gap-2 mt-1">
+                            <div className="flex flex-wrap items-center gap-2 mt-1">
                               <Badge className="bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200">
                                 {lender.type}
                               </Badge>
+                              {lender.lenderCategory.map((category, idx) => (
+                                <Badge key={idx} variant="outline" className="text-xs">
+                                  {category}
+                                </Badge>
+                              ))}
                               <div className="flex items-center text-sm text-amber-500">
                                 <Star className="fill-amber-500 h-4 w-4" />
                                 <span className="ml-1 text-slate-700">{lender.rating}</span>
