@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MicIcon, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { addDays } from "date-fns";
 
 const AddPropertyForm = () => {
   const { toast } = useToast();
@@ -29,21 +30,32 @@ const AddPropertyForm = () => {
     
     // Simulate saving the property
     setTimeout(() => {
+      // Calculate creation and expiration dates
+      const createdAt = new Date().toISOString();
+      // Property expires after 45 days
+      const expiresAt = addDays(new Date(), 45).toISOString();
+      
       // Save to local storage for demo purposes
       const savedProperties = JSON.parse(localStorage.getItem("savedProperties") || "[]");
       const newProperty = {
         id: Date.now().toString(),
         ...formData,
-        createdAt: new Date().toISOString()
+        createdAt,
+        expiresAt,
+        reminderSent14Days: false,
+        reminderSent30Days: false
       };
       
       savedProperties.push(newProperty);
       localStorage.setItem("savedProperties", JSON.stringify(savedProperties));
       
+      // Schedule reminder checks (in a real app this would be done by a server)
+      // For demo, we'll save the reminder flags to local storage
+      
       // Show success message
       toast({
         title: "Property Saved",
-        description: `${formData.address} was successfully added to your properties.`,
+        description: `${formData.address} was successfully added to your properties and will expire in 45 days.`,
       });
       
       // Reset form

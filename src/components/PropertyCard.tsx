@@ -2,8 +2,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Heart, Camera, Share2 } from "lucide-react";
+import { Heart, Camera, Share2, Clock } from "lucide-react";
 import { toast } from "sonner";
+import { format, formatDistanceToNow, isPast, addDays } from "date-fns";
 
 export interface PropertyData {
   id: string;
@@ -18,6 +19,8 @@ export interface PropertyData {
   type: "Fix & Flip" | "Buy & Hold" | "Rental";
   status: "Available" | "Pending" | "Under Contract" | "Sold";
   risk: "Low" | "Moderate" | "High";
+  createdAt?: string; // New field for posting date
+  expiresAt?: string; // New field for expiration date
 }
 
 interface PropertyCardProps {
@@ -37,7 +40,9 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     roi,
     type,
     status,
-    risk
+    risk,
+    createdAt,
+    expiresAt
   } = property;
 
   // Status color
@@ -62,6 +67,28 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     "Rental": "bg-teal-100 text-teal-700"
   };
 
+  // Format date and calculate days remaining until expiration
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "";
+    return format(new Date(dateString), "MMM d, yyyy");
+  };
+
+  const getDaysRemaining = (expiryDate?: string) => {
+    if (!expiryDate) return null;
+    const expiry = new Date(expiryDate);
+    if (isPast(expiry)) return "Expired";
+    
+    return formatDistanceToNow(expiry, { addSuffix: true });
+  };
+
+  const isExpiringSoon = (expiryDate?: string) => {
+    if (!expiryDate) return false;
+    const expiry = new Date(expiryDate);
+    const fifteenDaysBeforeExpiry = addDays(expiry, -15);
+    return isPast(fifteenDaysBeforeExpiry) && !isPast(expiry);
+  };
+
+  // Handle share functionality
   const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -148,7 +175,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             <div className="font-semibold">{sqft.toLocaleString()} <span className="text-slate-500 font-normal">sqft</span></div>
           </div>
 
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap mb-2">
             <Badge variant="outline" className={`tag-pill ${typeColors[type]}`}>
               {type}
             </Badge>
@@ -159,6 +186,18 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
               {roi}% ROI
             </Badge>
           </div>
+          
+          {createdAt && (
+            <div className="flex items-center text-xs text-slate-500 mt-2">
+              <Clock className="h-3 w-3 mr-1" /> Posted {formatDate(createdAt)}
+              
+              {expiresAt && isExpiringSoon(expiresAt) && (
+                <span className="ml-2 text-amber-600 font-medium">
+                  Expires {getDaysRemaining(expiresAt)}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </Card>
     </Link>

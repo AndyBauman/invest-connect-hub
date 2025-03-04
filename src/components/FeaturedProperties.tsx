@@ -1,11 +1,13 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropertyCard, { PropertyData } from "./PropertyCard";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Building, Home, Landmark, WalletCards, Key } from "lucide-react";
 import { Link } from "react-router-dom";
+import { addDays, isPast, differenceInDays } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
 
-// Sample property data
+// Sample property data with creation dates and expiration dates
 const sampleProperties: PropertyData[] = [
   {
     id: "prop1",
@@ -19,7 +21,9 @@ const sampleProperties: PropertyData[] = [
     roi: 12.5,
     type: "Buy & Hold",
     status: "Available",
-    risk: "Low"
+    risk: "Low",
+    createdAt: new Date().toISOString(),
+    expiresAt: addDays(new Date(), 45).toISOString()
   },
   {
     id: "prop2",
@@ -33,7 +37,9 @@ const sampleProperties: PropertyData[] = [
     roi: 18.3,
     type: "Fix & Flip",
     status: "Available",
-    risk: "High"
+    risk: "High",
+    createdAt: addDays(new Date(), -20).toISOString(),
+    expiresAt: addDays(new Date(), 25).toISOString()
   },
   {
     id: "prop3",
@@ -47,18 +53,106 @@ const sampleProperties: PropertyData[] = [
     roi: 8.7,
     type: "Rental",
     status: "Pending",
-    risk: "Moderate"
+    risk: "Moderate",
+    createdAt: addDays(new Date(), -35).toISOString(),
+    expiresAt: addDays(new Date(), 10).toISOString()
   }
 ];
 
 const FeaturedProperties = () => {
   const [category, setCategory] = useState<"all" | "Fix & Flip" | "Buy & Hold" | "Rental" | "Seller Financing" | "Subject To">("all");
+  const [properties, setProperties] = useState<PropertyData[]>([]);
+  const { toast } = useToast();
   
+  // Load properties from localStorage or use sample data
+  useEffect(() => {
+    const storedProperties = localStorage.getItem("savedProperties");
+    if (storedProperties) {
+      try {
+        const parsedProperties = JSON.parse(storedProperties);
+        // Combine with sample properties
+        setProperties([...parsedProperties, ...sampleProperties]);
+      } catch (e) {
+        console.error("Error parsing stored properties:", e);
+        setProperties(sampleProperties);
+      }
+    } else {
+      setProperties(sampleProperties);
+    }
+  }, []);
+
+  // Check for property reminders and expiration
+  useEffect(() => {
+    // In a real application, this would be a server-side task
+    // For demonstration, we'll check every time the component mounts
+    const checkPropertyReminders = () => {
+      const currentDate = new Date();
+      const updatedProperties = properties.map(property => {
+        if (!property.createdAt) return property;
+        
+        const createdDate = new Date(property.createdAt);
+        const daysSinceCreation = differenceInDays(currentDate, createdDate);
+        
+        let updated = { ...property };
+        
+        // Check for 14-day reminder
+        if (daysSinceCreation >= 14 && !(property as any).reminderSent14Days) {
+          // In a real app, this would send an email
+          console.log(`14-day reminder for property: ${property.title}`);
+          
+          // For demo, show a toast
+          toast({
+            title: "Property Reminder",
+            description: `Your listing "${property.title}" was posted 2 weeks ago. Please update its status.`,
+          });
+          
+          updated = { ...updated, reminderSent14Days: true };
+        }
+        
+        // Check for 30-day reminder
+        if (daysSinceCreation >= 30 && !(property as any).reminderSent30Days) {
+          // In a real app, this would send an email
+          console.log(`30-day reminder for property: ${property.title}`);
+          
+          // For demo, show a toast
+          toast({
+            title: "Property Expiring Soon",
+            description: `Your listing "${property.title}" will expire in 15 days if not updated.`,
+          });
+          
+          updated = { ...updated, reminderSent30Days: true };
+        }
+        
+        // Check for expiration (45 days)
+        if (property.expiresAt && isPast(new Date(property.expiresAt))) {
+          // In a real app, this would mark the property as expired in the database
+          console.log(`Property expired: ${property.title}`);
+          return null; // Remove expired properties
+        }
+        
+        return updated;
+      }).filter(Boolean) as PropertyData[]; // Remove null entries (expired properties)
+      
+      // Update stored properties
+      if (JSON.stringify(updatedProperties) !== JSON.stringify(properties)) {
+        setProperties(updatedProperties);
+        localStorage.setItem("savedProperties", JSON.stringify(
+          updatedProperties.filter(p => !sampleProperties.some(sp => sp.id === p.id))
+        ));
+      }
+    };
+    
+    checkPropertyReminders();
+    
+    // Real implementation would use a server-side job scheduler
+    // For demo, we'll just check once when component mounts
+  }, [properties, toast]);
+
   const filteredProperties = category === "all" 
-    ? sampleProperties 
+    ? properties 
     : category === "Seller Financing" || category === "Subject To"
-      ? sampleProperties // For demo purposes, show all properties when financing options are selected
-      : sampleProperties.filter(prop => prop.type === category);
+      ? properties // For demo purposes, show all properties when financing options are selected
+      : properties.filter(prop => prop.type === category);
 
   return (
     <section className="py-20 bg-white">
