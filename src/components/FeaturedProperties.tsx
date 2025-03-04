@@ -69,55 +69,57 @@ const FeaturedProperties = () => {
             <p className="text-slate-600">Exclusive investment opportunities curated for you</p>
           </div>
           
-          <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
-            <Button 
-              variant={category === "all" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setCategory("all")}
-              className="whitespace-nowrap"
-            >
-              <Building className="mr-1 h-4 w-4" /> All Properties
-            </Button>
-            <Button 
-              variant={category === "Fix & Flip" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setCategory("Fix & Flip")}
-              className="whitespace-nowrap"
-            >
-              <Home className="mr-1 h-4 w-4" /> Fix & Flip
-            </Button>
-            <Button 
-              variant={category === "Buy & Hold" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setCategory("Buy & Hold")}
-              className="whitespace-nowrap"
-            >
-              <Landmark className="mr-1 h-4 w-4" /> Buy & Hold
-            </Button>
-            <Button 
-              variant={category === "Rental" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setCategory("Rental")}
-              className="whitespace-nowrap"
-            >
-              <Building className="mr-1 h-4 w-4" /> Rental
-            </Button>
-            <Button 
-              variant={category === "Seller Financing" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setCategory("Seller Financing")}
-              className="whitespace-nowrap"
-            >
-              <WalletCards className="mr-1 h-4 w-4" /> Seller Financing
-            </Button>
-            <Button 
-              variant={category === "Subject To" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setCategory("Subject To")}
-              className="whitespace-nowrap"
-            >
-              <Key className="mr-1 h-4 w-4" /> Subject To
-            </Button>
+          <div className="w-full md:w-auto">
+            <div className="flex flex-wrap gap-2 overflow-x-auto pb-2 md:pb-0 max-w-full">
+              <Button 
+                variant={category === "all" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setCategory("all")}
+                className="whitespace-nowrap flex-shrink-0"
+              >
+                <Building className="mr-1 h-4 w-4" /> All Properties
+              </Button>
+              <Button 
+                variant={category === "Fix & Flip" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setCategory("Fix & Flip")}
+                className="whitespace-nowrap flex-shrink-0"
+              >
+                <Home className="mr-1 h-4 w-4" /> Fix & Flip
+              </Button>
+              <Button 
+                variant={category === "Buy & Hold" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setCategory("Buy & Hold")}
+                className="whitespace-nowrap flex-shrink-0"
+              >
+                <Landmark className="mr-1 h-4 w-4" /> Buy & Hold
+              </Button>
+              <Button 
+                variant={category === "Rental" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setCategory("Rental")}
+                className="whitespace-nowrap flex-shrink-0"
+              >
+                <Building className="mr-1 h-4 w-4" /> Rental
+              </Button>
+              <Button 
+                variant={category === "Seller Financing" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setCategory("Seller Financing")}
+                className="whitespace-nowrap flex-shrink-0"
+              >
+                <WalletCards className="mr-1 h-4 w-4" /> Seller Financing
+              </Button>
+              <Button 
+                variant={category === "Subject To" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setCategory("Subject To")}
+                className="whitespace-nowrap flex-shrink-0"
+              >
+                <Key className="mr-1 h-4 w-4" /> Subject To
+              </Button>
+            </div>
           </div>
         </div>
         
