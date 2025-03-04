@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -102,15 +103,15 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
-            <div className="mr-2">
-              <Button variant="ghost" size="icon" className="text-slate-700">
-                <Search className="h-5 w-5" />
-              </Button>
-            </div>
+            <Button variant="ghost" size="icon" className="text-slate-700 mr-2">
+              <Search className="h-5 w-5" />
+            </Button>
             <button
               type="button"
               className="p-2 rounded-md text-slate-600"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-expanded={mobileMenuOpen}
+              aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
                 <X className="h-6 w-6" />
@@ -124,7 +125,7 @@ const Navbar = () => {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-slate-200">
+        <div className="md:hidden bg-white border-b border-slate-200 max-h-[80vh] overflow-y-auto">
           <div className="px-4 pt-2 pb-4 space-y-1">
             <Link
               to="/properties"

@@ -1,32 +1,50 @@
 
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Car, Eye, CloudOff, Route } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ModeSelector = () => {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden border border-slate-200">
-      <div className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Mode Selection</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <Button variant="outline" className="h-auto py-4 flex flex-col items-center justify-center gap-2">
-            <Car className="h-6 w-6" />
-            <span>Driving Mode</span>
-          </Button>
-          <Button variant="outline" className="h-auto py-4 flex flex-col items-center justify-center gap-2">
-            <Eye className="h-6 w-6" />
-            <span>Virtual Mode</span>
-          </Button>
-          <Button variant="outline" className="h-auto py-4 flex flex-col items-center justify-center gap-2">
-            <CloudOff className="h-6 w-6" />
-            <span>Offline Mode</span>
-          </Button>
-          <Button variant="outline" className="h-auto py-4 flex flex-col items-center justify-center gap-2">
-            <Route className="h-6 w-6" />
-            <span>Route Planning</span>
-          </Button>
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg">Mode Selection</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col space-y-3">
+          <p className="text-sm text-slate-600 mb-2">Select your investment strategy:</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <Button 
+              variant="outline" 
+              className="text-sm h-auto py-2 justify-start"
+              onClick={() => console.log("Rentals selected")}
+            >
+              Rentals
+            </Button>
+            <Button 
+              variant="outline" 
+              className="text-sm h-auto py-2 justify-start"
+              onClick={() => console.log("Fix and Flip selected")}
+            >
+              Fix &amp; Flip
+            </Button>
+            <Button 
+              variant="outline" 
+              className="text-sm h-auto py-2 justify-start"
+              onClick={() => console.log("Seller Finance selected")}
+            >
+              Seller Finance
+            </Button>
+            <Button 
+              variant="outline" 
+              className="text-sm h-auto py-2 justify-start"
+              onClick={() => console.log("Subject To selected")}
+            >
+              Subject To
+            </Button>
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
