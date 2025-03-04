@@ -9,7 +9,7 @@ const AccessBanner = () => {
         <div className="flex items-center gap-2 text-amber-800">
           <Route className="h-5 w-5" />
           <span className="text-sm md:text-base">
-            <strong>Quick Tip:</strong> Access Driving for Dollars directly at <code className="bg-white px-2 py-1 rounded text-amber-700">/driving-for-dollars</code> or from the footer navigation
+            Driving for Dollars
           </span>
         </div>
         <Link to="/" className="text-sm text-amber-700 font-medium hover:underline">Back to Home</Link>
