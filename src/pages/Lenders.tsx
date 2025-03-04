@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Filter, Star, ArrowUpRight, Landmark, Building, Briefcase, MapPin } from "lucide-react";
+import { Filter, Star, ArrowUpRight, Landmark, Building, Briefcase, MapPin, Target } from "lucide-react";
 
 const lendersData = [
   {
@@ -64,6 +64,8 @@ const lendersData = [
 const Lenders = () => {
   const [locationFilter, setLocationFilter] = useState("");
   const [statesFilter, setStatesFilter] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [radius, setRadius] = useState("10");
   const [showFilters, setShowFilters] = useState(false);
   
   // Filter lenders based on location and states served
@@ -73,8 +75,22 @@ const Lenders = () => {
       state.toLowerCase().includes(statesFilter.toLowerCase())
     ) || (lender.states.includes("Nationwide") && statesFilter);
     
-    return (!locationFilter || matchesLocation) && (!statesFilter || matchesStates);
+    // For now, we're not implementing actual zip code radius search logic
+    // as it would require geolocation data and distance calculation
+    // We'll just show all results if no other filters are applied when zip is entered
+    const matchesZipRadius = !zipCode || zipCode === "";
+    
+    return (!locationFilter || matchesLocation) && 
+           (!statesFilter || matchesStates) &&
+           matchesZipRadius;
   });
+
+  const handleClearFilters = () => {
+    setLocationFilter("");
+    setStatesFilter("");
+    setZipCode("");
+    setRadius("10");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -102,7 +118,7 @@ const Lenders = () => {
           
           {showFilters && (
             <div className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-200">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label htmlFor="location" className="block text-sm font-medium text-slate-700 mb-1">
                     Lender Location
@@ -135,6 +151,50 @@ const Lenders = () => {
                     />
                   </div>
                 </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label htmlFor="zipCode" className="block text-sm font-medium text-slate-700 mb-1">
+                      Zip Code
+                    </label>
+                    <div className="relative">
+                      <Target className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                      <Input
+                        id="zipCode"
+                        type="text"
+                        placeholder="Enter zip code"
+                        className="pl-10"
+                        value={zipCode}
+                        onChange={(e) => setZipCode(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="radius" className="block text-sm font-medium text-slate-700 mb-1">
+                      Miles Radius
+                    </label>
+                    <select
+                      id="radius"
+                      value={radius}
+                      onChange={(e) => setRadius(e.target.value)}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    >
+                      <option value="5">5 miles</option>
+                      <option value="10">10 miles</option>
+                      <option value="25">25 miles</option>
+                      <option value="50">50 miles</option>
+                      <option value="100">100 miles</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 flex justify-end">
+                <Button 
+                  variant="outline" 
+                  className="text-sm"
+                  onClick={handleClearFilters}
+                >
+                  Clear Filters
+                </Button>
               </div>
             </div>
           )}
@@ -215,10 +275,7 @@ const Lenders = () => {
                 <Button 
                   variant="outline" 
                   className="mt-4"
-                  onClick={() => {
-                    setLocationFilter("");
-                    setStatesFilter("");
-                  }}
+                  onClick={handleClearFilters}
                 >
                   Clear Filters
                 </Button>
