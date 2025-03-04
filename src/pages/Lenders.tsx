@@ -3,7 +3,9 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Filter, Star, ArrowUpRight, Landmark, Building, Briefcase } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { Filter, Star, ArrowUpRight, Landmark, Building, Briefcase, MapPin } from "lucide-react";
 
 const lendersData = [
   {
@@ -19,6 +21,7 @@ const lendersData = [
     termLength: "6-24 months",
     closingTime: "7-10 days",
     states: ["TX", "FL", "GA", "NC", "SC"],
+    location: "Atlanta, GA",
     rating: 4.8,
     reviews: 124
   },
@@ -35,6 +38,7 @@ const lendersData = [
     termLength: "15-30 years",
     closingTime: "30-45 days",
     states: ["Nationwide"],
+    location: "Denver, CO",
     rating: 4.6,
     reviews: 98
   },
@@ -51,12 +55,27 @@ const lendersData = [
     termLength: "3-36 months",
     closingTime: "3-5 days",
     states: ["CA", "NY", "IL", "MA", "WA"],
+    location: "San Francisco, CA",
     rating: 4.3,
     reviews: 76
   },
 ];
 
 const Lenders = () => {
+  const [locationFilter, setLocationFilter] = useState("");
+  const [statesFilter, setStatesFilter] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Filter lenders based on location and states served
+  const filteredLenders = lendersData.filter(lender => {
+    const matchesLocation = lender.location.toLowerCase().includes(locationFilter.toLowerCase());
+    const matchesStates = lender.states.some(state => 
+      state.toLowerCase().includes(statesFilter.toLowerCase())
+    ) || (lender.states.includes("Nationwide") && statesFilter);
+    
+    return (!locationFilter || matchesLocation) && (!statesFilter || matchesStates);
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -70,74 +89,141 @@ const Lenders = () => {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" className="gap-1">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-1"
+                onClick={() => setShowFilters(!showFilters)}
+              >
                 <Filter className="h-4 w-4" /> Filters
               </Button>
             </div>
           </div>
           
-          <div className="grid gap-6 md:grid-cols-2">
-            {lendersData.map((lender) => (
-              <Card key={lender.id} className="overflow-hidden transition-all hover:shadow-md">
-                <div className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-16 h-16 bg-slate-100 rounded-md overflow-hidden">
-                      <img 
-                        src={lender.logo} 
-                        alt={lender.name} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h3 className="text-xl font-semibold">{lender.name}</h3>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge className="bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200">
-                              {lender.type}
-                            </Badge>
-                            <div className="flex items-center text-sm text-amber-500">
-                              <Star className="fill-amber-500 h-4 w-4" />
-                              <span className="ml-1 text-slate-700">{lender.rating}</span>
-                              <span className="ml-1 text-slate-500">({lender.reviews})</span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <Button variant="outline" size="sm" className="gap-1">
-                          <span>Profile</span>
-                          <ArrowUpRight className="h-3 w-3" />
-                        </Button>
-                      </div>
-                      
-                      <p className="text-slate-600 text-sm mt-2">
-                        {lender.description}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                    <div>
-                      <p className="text-xs text-slate-500 mb-1">Interest Rate</p>
-                      <p className="text-sm font-medium">{lender.interestRate}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500 mb-1">Max LTV</p>
-                      <p className="text-sm font-medium">{lender.ltv}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500 mb-1">Loan Range</p>
-                      <p className="text-sm font-medium">${(lender.minLoan/1000)}K-${(lender.maxLoan/1000000)}M</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500 mb-1">Term Length</p>
-                      <p className="text-sm font-medium">{lender.termLength}</p>
-                    </div>
+          {showFilters && (
+            <div className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-200">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="location" className="block text-sm font-medium text-slate-700 mb-1">
+                    Lender Location
+                  </label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <Input
+                      id="location"
+                      type="text"
+                      placeholder="City, State (e.g. Denver, CO)"
+                      className="pl-10"
+                      value={locationFilter}
+                      onChange={(e) => setLocationFilter(e.target.value)}
+                    />
                   </div>
                 </div>
-              </Card>
-            ))}
+                <div>
+                  <label htmlFor="states" className="block text-sm font-medium text-slate-700 mb-1">
+                    States Served
+                  </label>
+                  <div className="relative">
+                    <Landmark className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <Input
+                      id="states"
+                      type="text"
+                      placeholder="State abbreviation (e.g. TX, FL)"
+                      className="pl-10"
+                      value={statesFilter}
+                      onChange={(e) => setStatesFilter(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div className="grid gap-6 md:grid-cols-2">
+            {filteredLenders.length > 0 ? (
+              filteredLenders.map((lender) => (
+                <Card key={lender.id} className="overflow-hidden transition-all hover:shadow-md">
+                  <div className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-16 h-16 bg-slate-100 rounded-md overflow-hidden">
+                        <img 
+                          src={lender.logo} 
+                          alt={lender.name} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h3 className="text-xl font-semibold">{lender.name}</h3>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge className="bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200">
+                                {lender.type}
+                              </Badge>
+                              <div className="flex items-center text-sm text-amber-500">
+                                <Star className="fill-amber-500 h-4 w-4" />
+                                <span className="ml-1 text-slate-700">{lender.rating}</span>
+                                <span className="ml-1 text-slate-500">({lender.reviews})</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <Button variant="outline" size="sm" className="gap-1">
+                            <span>Profile</span>
+                            <ArrowUpRight className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        
+                        <p className="text-slate-600 text-sm mt-2">
+                          {lender.description}
+                        </p>
+                        
+                        <div className="flex items-center mt-2 text-sm text-slate-600">
+                          <MapPin className="h-3.5 w-3.5 mr-1" />
+                          <span>{lender.location}</span>
+                          <span className="mx-2 text-slate-300">•</span>
+                          <span>Serves: {lender.states.join(", ")}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                      <div>
+                        <p className="text-xs text-slate-500 mb-1">Interest Rate</p>
+                        <p className="text-sm font-medium">{lender.interestRate}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 mb-1">Max LTV</p>
+                        <p className="text-sm font-medium">{lender.ltv}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 mb-1">Loan Range</p>
+                        <p className="text-sm font-medium">${(lender.minLoan/1000)}K-${(lender.maxLoan/1000000)}M</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 mb-1">Term Length</p>
+                        <p className="text-sm font-medium">{lender.termLength}</p>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-2 py-16 text-center">
+                <p className="text-slate-500">No lenders match your filter criteria.</p>
+                <Button 
+                  variant="outline" 
+                  className="mt-4"
+                  onClick={() => {
+                    setLocationFilter("");
+                    setStatesFilter("");
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </main>

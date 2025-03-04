@@ -3,9 +3,11 @@ import Navbar from "@/components/Navbar";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import {
   Hammer, Wrench, TrendingUp, PaintBucket, TruckIcon, FileText,
-  HomeIcon, Users, Calculator, ArrowUpRight, Star
+  HomeIcon, Users, Calculator, ArrowUpRight, Star, MapPin, Filter
 } from "lucide-react";
 
 const servicesData = [
@@ -18,6 +20,7 @@ const servicesData = [
     rating: 4.9,
     reviews: 87,
     location: "Austin, TX",
+    areasServed: ["Travis County", "Williamson County", "Hays County"],
     specialties: ["Kitchen Remodels", "Bathroom Renovations", "Full Rehabs"],
     icon: PaintBucket
   },
@@ -29,7 +32,8 @@ const servicesData = [
     description: "Full-service property management for landlords and investors.",
     rating: 4.7,
     reviews: 124,
-    location: "Multiple Locations",
+    location: "Chicago, IL",
+    areasServed: ["Cook County", "Lake County", "DuPage County", "Will County"],
     specialties: ["Tenant Screening", "Maintenance", "Rent Collection"],
     icon: HomeIcon
   },
@@ -42,6 +46,7 @@ const servicesData = [
     rating: 4.8,
     reviews: 56,
     location: "Denver, CO",
+    areasServed: ["Denver Metro", "Boulder", "Fort Collins", "Colorado Springs"],
     specialties: ["Title Insurance", "Closing Services", "Document Preparation"],
     icon: FileText
   },
@@ -54,22 +59,88 @@ const servicesData = [
     rating: 4.6,
     reviews: 42,
     location: "Remote",
+    areasServed: ["Nationwide"],
     specialties: ["Cash Flow Analysis", "Rehab Estimates", "Market Research"],
     icon: Calculator
   },
 ];
 
 const Services = () => {
+  const [providerLocation, setProviderLocation] = useState("");
+  const [areaServed, setAreaServed] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Filter services based on location and areas served
+  const filteredServices = servicesData.filter(service => {
+    const matchesLocation = service.location.toLowerCase().includes(providerLocation.toLowerCase());
+    const matchesAreaServed = service.areasServed.some(area => 
+      area.toLowerCase().includes(areaServed.toLowerCase())
+    ) || (service.areasServed.includes("Nationwide") && areaServed);
+    
+    return (!providerLocation || matchesLocation) && (!areaServed || matchesAreaServed);
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
       <main className="flex-1 pt-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-display font-semibold text-slate-900">Services Directory</h1>
-            <p className="text-slate-600">Connect with top-rated service providers for your investment needs</p>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <div>
+              <h1 className="text-3xl font-display font-semibold text-slate-900">Services Directory</h1>
+              <p className="text-slate-600">Connect with top-rated service providers for your investment needs</p>
+            </div>
+            
+            <div className="flex items-center gap-3 mt-4 md:mt-0">
+              <Button 
+                variant="outline" 
+                className="gap-1"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                <Filter className="h-4 w-4" /> Filters
+              </Button>
+            </div>
           </div>
+          
+          {showFilters && (
+            <div className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-200">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="providerLocation" className="block text-sm font-medium text-slate-700 mb-1">
+                    Provider Location
+                  </label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <Input
+                      id="providerLocation"
+                      type="text"
+                      placeholder="City, State (e.g. Austin, TX)"
+                      className="pl-10"
+                      value={providerLocation}
+                      onChange={(e) => setProviderLocation(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="areaServed" className="block text-sm font-medium text-slate-700 mb-1">
+                    Areas Served
+                  </label>
+                  <div className="relative">
+                    <Hammer className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <Input
+                      id="areaServed"
+                      type="text"
+                      placeholder="County, City, or Region"
+                      className="pl-10"
+                      value={areaServed}
+                      onChange={(e) => setAreaServed(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <Button variant="outline" className="justify-start">
@@ -87,56 +158,79 @@ const Services = () => {
           </div>
           
           <div className="grid gap-6 md:grid-cols-2">
-            {servicesData.map((service) => (
-              <Card key={service.id} className="overflow-hidden transition-all hover:shadow-md">
-                <div className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-16 h-16 bg-slate-100 rounded-md overflow-hidden">
-                      <img 
-                        src={service.logo} 
-                        alt={service.name} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h3 className="text-xl font-semibold">{service.name}</h3>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-200">
-                              {service.category}
-                            </Badge>
-                            <div className="flex items-center text-sm text-amber-500">
-                              <Star className="fill-amber-500 h-4 w-4" />
-                              <span className="ml-1 text-slate-700">{service.rating}</span>
-                              <span className="ml-1 text-slate-500">({service.reviews})</span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <Button variant="outline" size="sm" className="gap-1">
-                          <span>Profile</span>
-                          <ArrowUpRight className="h-3 w-3" />
-                        </Button>
+            {filteredServices.length > 0 ? (
+              filteredServices.map((service) => (
+                <Card key={service.id} className="overflow-hidden transition-all hover:shadow-md">
+                  <div className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-16 h-16 bg-slate-100 rounded-md overflow-hidden">
+                        <img 
+                          src={service.logo} 
+                          alt={service.name} 
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                       
-                      <p className="text-slate-600 text-sm mt-2">
-                        {service.description}
-                      </p>
-                      
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        {service.specialties.map((specialty, index) => (
-                          <Badge key={index} variant="outline" className="bg-slate-50">
-                            {specialty}
-                          </Badge>
-                        ))}
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h3 className="text-xl font-semibold">{service.name}</h3>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-200">
+                                {service.category}
+                              </Badge>
+                              <div className="flex items-center text-sm text-amber-500">
+                                <Star className="fill-amber-500 h-4 w-4" />
+                                <span className="ml-1 text-slate-700">{service.rating}</span>
+                                <span className="ml-1 text-slate-500">({service.reviews})</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <Button variant="outline" size="sm" className="gap-1">
+                            <span>Profile</span>
+                            <ArrowUpRight className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        
+                        <p className="text-slate-600 text-sm mt-2">
+                          {service.description}
+                        </p>
+                        
+                        <div className="flex items-center mt-2 text-sm text-slate-600">
+                          <MapPin className="h-3.5 w-3.5 mr-1" />
+                          <span>{service.location}</span>
+                          <span className="mx-2 text-slate-300">•</span>
+                          <span>Serves: {service.areasServed.join(", ")}</span>
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-2 mt-3">
+                          {service.specialties.map((specialty, index) => (
+                            <Badge key={index} variant="outline" className="bg-slate-50">
+                              {specialty}
+                            </Badge>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-2 py-16 text-center">
+                <p className="text-slate-500">No service providers match your filter criteria.</p>
+                <Button 
+                  variant="outline" 
+                  className="mt-4"
+                  onClick={() => {
+                    setProviderLocation("");
+                    setAreaServed("");
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </main>
