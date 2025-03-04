@@ -1,218 +1,163 @@
 
 import Navbar from "@/components/Navbar";
+import AdditionalFeatures from "@/components/AdditionalFeatures";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  MapPin, 
-  Mail, 
-  Phone,
-  MessageSquare,
-  HelpCircle,
-  Users,
-  Building
-} from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Mail, Phone, MapPin } from "lucide-react";
 
-const ContactPage = () => {
+const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
     subject: "",
     message: ""
   });
   
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Add form submission logic here
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      toast({
+        title: "Message Sent",
+        description: "Thank you for contacting us. We'll get back to you soon!",
+      });
+      
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: ""
+      });
+      
+      setIsSubmitting(false);
+    }, 1500);
   };
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
-      <main className="flex-1 pt-20">
+      <main className="flex-1 pt-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl font-display font-semibold text-slate-900 mb-4">Contact Us</h1>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                Have questions about InvestConnect? We're here to help!
-              </p>
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h1 className="text-4xl font-display font-semibold text-slate-900 mb-4">Contact Us</h1>
+            <p className="text-lg text-slate-600">Have questions about our platform? Get in touch with our team.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+              <div className="flex items-center mb-4">
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-semibold">Email Us</h3>
+              </div>
+              <p className="text-slate-600">contact@investconnect.com</p>
+              <p className="text-slate-600 mt-1">support@investconnect.com</p>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Contact Form */}
-              <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
-                <h2 className="text-2xl font-semibold mb-6">Send us a message</h2>
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+              <div className="flex items-center mb-4">
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-3">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-semibold">Call Us</h3>
+              </div>
+              <p className="text-slate-600">(555) 123-4567</p>
+              <p className="text-slate-600 mt-1">Monday-Friday, 9AM-5PM EST</p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+              <div className="flex items-center mb-4">
+                <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mr-3">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-semibold">Office Location</h3>
+              </div>
+              <p className="text-slate-600">123 Investment Ave</p>
+              <p className="text-slate-600 mt-1">New York, NY 10001</p>
+            </div>
+          </div>
+          
+          <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-16">
+            <div className="p-8">
+              <h2 className="text-2xl font-semibold mb-6">Send Us a Message</h2>
+              
+              <form onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
-                      Your Name
-                    </label>
+                    <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">Your Name</label>
                     <Input
                       id="name"
                       name="name"
-                      placeholder="John Doe"
                       value={formData.name}
                       onChange={handleChange}
                       required
                     />
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
-                        Email Address
-                      </label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="you@example.com"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-1">
-                        Phone Number
-                      </label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        placeholder="(123) 456-7890"
-                        value={formData.phone}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </div>
-                  
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-slate-700 mb-1">
-                      Subject
-                    </label>
+                    <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
                     <Input
-                      id="subject"
-                      name="subject"
-                      placeholder="How can we help you?"
-                      value={formData.subject}
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
                       onChange={handleChange}
                       required
                     />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-1">
-                      Your Message
-                    </label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      rows={5}
-                      placeholder="Please provide details about your inquiry..."
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      className="resize-none"
-                    />
-                  </div>
-                  
-                  <Button type="submit" className="w-full" size="lg">
-                    Send Message
-                  </Button>
-                </form>
-              </div>
-              
-              {/* Contact Information */}
-              <div>
-                <div className="bg-primary text-white p-8 rounded-xl mb-8">
-                  <h2 className="text-2xl font-semibold mb-6">Get in touch</h2>
-                  
-                  <div className="space-y-6">
-                    <div className="flex items-start">
-                      <MapPin className="h-6 w-6 mr-4 flex-shrink-0" />
-                      <div>
-                        <h3 className="font-medium">Our Headquarters</h3>
-                        <p className="mt-1 text-white/80">
-                          1234 Market Street<br />
-                          Suite 500<br />
-                          San Francisco, CA 94103
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center">
-                      <Mail className="h-6 w-6 mr-4 flex-shrink-0" />
-                      <div>
-                        <h3 className="font-medium">Email Us</h3>
-                        <p className="mt-1 text-white/80">
-                          support@investconnect.com
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center">
-                      <Phone className="h-6 w-6 mr-4 flex-shrink-0" />
-                      <div>
-                        <h3 className="font-medium">Call Us</h3>
-                        <p className="mt-1 text-white/80">
-                          (123) 456-7890
-                        </p>
-                      </div>
-                    </div>
                   </div>
                 </div>
                 
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-semibold">Frequently asked questions</h2>
-                  
-                  <div className="space-y-4">
-                    <div className="bg-slate-100 p-4 rounded-lg">
-                      <h3 className="font-medium flex items-center">
-                        <HelpCircle className="h-4 w-4 mr-2 text-primary" />
-                        What is InvestConnect?
-                      </h3>
-                      <p className="mt-2 text-sm text-slate-600">
-                        InvestConnect is a platform that connects real estate investors with properties, lenders, and service providers to streamline the investment process.
-                      </p>
-                    </div>
-                    
-                    <div className="bg-slate-100 p-4 rounded-lg">
-                      <h3 className="font-medium flex items-center">
-                        <Building className="h-4 w-4 mr-2 text-primary" />
-                        How do I list a property?
-                      </h3>
-                      <p className="mt-2 text-sm text-slate-600">
-                        You can list a property by creating an account and using our property submission form. Premium members can post unlimited listings.
-                      </p>
-                    </div>
-                    
-                    <div className="bg-slate-100 p-4 rounded-lg">
-                      <h3 className="font-medium flex items-center">
-                        <Users className="h-4 w-4 mr-2 text-primary" />
-                        Do you offer enterprise plans?
-                      </h3>
-                      <p className="mt-2 text-sm text-slate-600">
-                        Yes, we offer custom enterprise plans for large teams and companies with specific needs. Contact our sales team for details.
-                      </p>
-                    </div>
-                  </div>
+                <div className="mb-4">
+                  <label htmlFor="subject" className="block text-sm font-medium text-slate-700 mb-1">Subject</label>
+                  <Input
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
-              </div>
+                
+                <div className="mb-6">
+                  <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-1">Your Message</label>
+                  <Textarea
+                    id="message"
+                    name="message"
+                    rows={5}
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full sm:w-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Sending..." : "Send Message"}
+                </Button>
+              </form>
             </div>
           </div>
+          
+          {/* Additional Features Section */}
+          <AdditionalFeatures />
         </div>
       </main>
       
@@ -266,4 +211,4 @@ const ContactPage = () => {
   );
 };
 
-export default ContactPage;
+export default Contact;
