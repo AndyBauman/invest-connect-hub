@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import PropertyCard, { PropertyData } from "./PropertyCard";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Building, Home, Landmark, WalletCards, Key } from "lucide-react";
+import { ChevronRight, Building, Home, Landmark, WalletCards, Key, Warehouse, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
 import { addDays, isPast, differenceInDays } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -56,11 +56,43 @@ const sampleProperties: PropertyData[] = [
     risk: "Moderate",
     createdAt: addDays(new Date(), -35).toISOString(),
     expiresAt: addDays(new Date(), 10).toISOString()
+  },
+  {
+    id: "prop4",
+    title: "Climate-Controlled Storage Facility",
+    address: "123 Storage Lane, Houston, TX 77002",
+    price: 540000,
+    image: "https://images.unsplash.com/photo-1583876232113-9c31cc9f84b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+    beds: 0,
+    baths: 1,
+    sqft: 8500,
+    roi: 15.2,
+    type: "Storage Units",
+    status: "Available",
+    risk: "Low",
+    createdAt: addDays(new Date(), -5).toISOString(),
+    expiresAt: addDays(new Date(), 40).toISOString()
+  },
+  {
+    id: "prop5",
+    title: "Profitable Laundromat",
+    address: "456 Business Ave, Chicago, IL 60607",
+    price: 275000,
+    image: "https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+    beds: 0,
+    baths: 2,
+    sqft: 2200,
+    roi: 22.5,
+    type: "Business",
+    status: "Available",
+    risk: "Moderate",
+    createdAt: addDays(new Date(), -10).toISOString(),
+    expiresAt: addDays(new Date(), 35).toISOString()
   }
 ];
 
 const FeaturedProperties = () => {
-  const [category, setCategory] = useState<"all" | "Fix & Flip" | "Buy & Hold" | "Rental" | "Seller Financing" | "Subject To">("all");
+  const [category, setCategory] = useState<"all" | "Fix & Flip" | "Buy & Hold" | "Rental" | "Seller Financing" | "Subject To" | "Storage Units" | "Business">("all");
   const [properties, setProperties] = useState<PropertyData[]>([]);
   const { toast } = useToast();
   
@@ -196,6 +228,22 @@ const FeaturedProperties = () => {
                 className="whitespace-nowrap flex-shrink-0"
               >
                 <Building className="mr-1 h-4 w-4" /> Rental
+              </Button>
+              <Button 
+                variant={category === "Storage Units" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setCategory("Storage Units")}
+                className="whitespace-nowrap flex-shrink-0"
+              >
+                <Warehouse className="mr-1 h-4 w-4" /> Storage Units
+              </Button>
+              <Button 
+                variant={category === "Business" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setCategory("Business")}
+                className="whitespace-nowrap flex-shrink-0"
+              >
+                <Briefcase className="mr-1 h-4 w-4" /> Businesses
               </Button>
               <Button 
                 variant={category === "Seller Financing" ? "default" : "outline"} 

@@ -15,7 +15,7 @@ export interface PropertyData {
   baths: number;
   sqft: number;
   roi: number;
-  type: "Fix & Flip" | "Buy & Hold" | "Rental";
+  type: "Fix & Flip" | "Buy & Hold" | "Rental" | "Storage Units" | "Business";
   status: "Available" | "Pending" | "Under Contract" | "Sold";
   risk: "Low" | "Moderate" | "High";
   createdAt?: string;
@@ -64,7 +64,9 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
   const typeColors = {
     "Fix & Flip": "bg-purple-100 text-purple-700",
     "Buy & Hold": "bg-blue-100 text-blue-700",
-    "Rental": "bg-teal-100 text-teal-700"
+    "Rental": "bg-teal-100 text-teal-700",
+    "Storage Units": "bg-amber-100 text-amber-700",
+    "Business": "bg-indigo-100 text-indigo-700"
   };
 
   const formatDate = (dateString?: string) => {
