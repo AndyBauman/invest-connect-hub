@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { 
   Home, Building, Landmark, Warehouse, Briefcase, MapPin, 
-  DollarSign, BarChart3, Ruler, BedDouble, Bath, Tool, 
+  DollarSign, BarChart3, Ruler, BedDouble, Bath, Wrench, 
   UserX, Repeat, CreditCard, Bell, X, Plus, Filter, Save
 } from "lucide-react";
 import { toast } from "sonner";
@@ -188,10 +187,8 @@ const BuyBox = () => {
   };
 
   const handleSaveBuyBox = () => {
-    // In a real app, this would save to a database
     const buyBoxName = `Buy Box ${new Date().toLocaleString()}`;
     
-    // For demo, save to localStorage
     const savedBuyBoxes = JSON.parse(localStorage.getItem('savedBuyBoxes') || '[]');
     savedBuyBoxes.push({
       id: Date.now().toString(),
@@ -204,10 +201,8 @@ const BuyBox = () => {
   };
 
   const handleApplyBuyBox = () => {
-    // In a real app, this would update the property search/filter UI
     toast.success("Buy Box criteria applied to property search!");
     
-    // For demo purposes only - log the criteria
     console.log("Applied Buy Box criteria:", criteria);
   };
 
@@ -237,7 +232,6 @@ const BuyBox = () => {
 
       <div className="p-6 max-h-[70vh] overflow-y-auto">
         <div className="space-y-6">
-          {/* Location Section */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md flex items-center">
@@ -276,7 +270,6 @@ const BuyBox = () => {
             </CardContent>
           </Card>
 
-          {/* Property Type */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md flex items-center">
@@ -301,7 +294,6 @@ const BuyBox = () => {
             </CardContent>
           </Card>
 
-          {/* Price Range */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md flex items-center">
@@ -326,7 +318,6 @@ const BuyBox = () => {
             </CardContent>
           </Card>
 
-          {/* ROI Metrics */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md flex items-center">
@@ -370,7 +361,6 @@ const BuyBox = () => {
             </CardContent>
           </Card>
 
-          {/* Property Size & Features */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md flex items-center">
@@ -434,11 +424,10 @@ const BuyBox = () => {
             </CardContent>
           </Card>
 
-          {/* Property Condition */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md flex items-center">
-                <Tool className="h-4 w-4 mr-2" /> Property Condition
+                <Wrench className="h-4 w-4 mr-2" /> Property Condition
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -459,7 +448,6 @@ const BuyBox = () => {
             </CardContent>
           </Card>
 
-          {/* Seller Motivation */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md flex items-center">
@@ -484,7 +472,6 @@ const BuyBox = () => {
             </CardContent>
           </Card>
 
-          {/* Exit Strategy */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md flex items-center">
@@ -509,7 +496,6 @@ const BuyBox = () => {
             </CardContent>
           </Card>
 
-          {/* Financing Options */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md flex items-center">
@@ -534,7 +520,6 @@ const BuyBox = () => {
             </CardContent>
           </Card>
 
-          {/* Notification Preferences */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md flex items-center">
