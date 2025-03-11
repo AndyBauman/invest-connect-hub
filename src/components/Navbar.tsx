@@ -1,213 +1,167 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { useTheme } from "@/components/theme-provider"
+import { ModeToggle } from "@/components/mode-toggle"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
-  Home,
-  Menu,
-  X,
-  User,
-  LogIn,
-  Heart,
-  Bell,
-  Search,
-  ChevronDown
-} from "lucide-react";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button";
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isLoggedIn = false; // This would come from auth state
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { theme } = useTheme();
+  const navigate = useNavigate();
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const navItems = [
+    { name: "Properties", path: "/properties" },
+    { name: "Lenders", path: "/lenders" },
+    { name: "Services", path: "/services" },
+    { name: "Membership", path: "/membership" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+    { name: "Buy Box", path: "/buy-box" }
+  ];
+
+  const handleLogout = () => {
+    // Clear the token from localStorage
+    localStorage.removeItem('authToken');
+    // Redirect the user to the login page
+    navigate('/login');
+  };
+
+  // Check if the user is logged in by verifying the presence of a token
+  const isLoggedIn = localStorage.getItem('authToken') !== null;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-1.5">
-              <Home className="h-6 w-6 text-primary" />
-              <span className="font-display text-xl font-semibold">InvestConnect</span>
-            </Link>
+    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 fixed top-0 left-0 w-full z-50">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <Link to="/" className="text-lg font-semibold text-slate-900 dark:text-white">
+          InvestConnect
+        </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center ml-10 space-x-1">
-              <Link to="/properties" className="text-sm font-medium text-slate-700 hover:text-primary px-3 py-2 rounded-md transition-colors">
-                Buy
-              </Link>
-              <Link to="/lenders" className="text-sm font-medium text-slate-700 hover:text-primary px-3 py-2 rounded-md transition-colors">
-                Lenders
-              </Link>
-              <Link to="/services" className="text-sm font-medium text-slate-700 hover:text-primary px-3 py-2 rounded-md transition-colors">
-                Services
-              </Link>
-              <Link to="/driving-for-dollars" className="text-sm font-medium text-slate-700 hover:text-primary px-3 py-2 rounded-md transition-colors">
-                Driving for Dollars
-              </Link>
-              <Link to="/membership" className="text-sm font-medium text-slate-700 hover:text-primary px-3 py-2 rounded-md transition-colors">
-                Plans
-              </Link>
-              <div className="relative group">
-                <button className="text-sm font-medium text-slate-700 hover:text-primary px-3 py-2 rounded-md transition-colors flex items-center">
-                  More <ChevronDown className="ml-1 h-4 w-4" />
-                </button>
-                <div className="absolute left-0 mt-1 w-48 bg-white border border-slate-200 rounded-md shadow-lg hidden group-hover:block">
-                  <div className="py-1">
-                    <Link to="/about" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">About Us</Link>
-                    <Link to="/blog" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Blog</Link>
-                    <Link to="/contact" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Contact</Link>
-                    <Link to="/sitemap" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Sitemap</Link>
-                  </div>
-                </div>
-              </div>
-            </nav>
-          </div>
-
-          <div className="hidden md:flex items-center space-x-2">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search properties..."
-                className="py-1.5 pl-9 pr-3 w-60 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-              />
-              <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-            </div>
-            
-            {isLoggedIn ? (
-              <>
-                <Button variant="ghost" size="icon" className="text-slate-700">
-                  <Heart className="h-5 w-5" />
-                </Button>
-                <Button variant="ghost" size="icon" className="text-slate-700">
-                  <Bell className="h-5 w-5" />
-                </Button>
-                <Link to="/profile">
-                  <Button variant="ghost" size="icon" className="text-slate-700">
-                    <User className="h-5 w-5" />
-                  </Button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="/login">
-                  <Button variant="ghost" size="sm" className="text-slate-700">
-                    Log In
-                  </Button>
-                </Link>
-                <Link to="/signup">
-                  <Button size="sm">
-                    Sign Up
-                  </Button>
-                </Link>
-              </>
-            )}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
-            <Button variant="ghost" size="icon" className="text-slate-700 mr-2">
-              <Search className="h-5 w-5" />
-            </Button>
-            <button
-              type="button"
-              className="p-2 rounded-md text-slate-600"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-expanded={mobileMenuOpen}
-              aria-label="Toggle menu"
+        <div className="hidden md:flex items-center gap-6">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
             >
-              {mobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
+              {item.name}
+            </Link>
+          ))}
+        </div>
+
+        <div className="hidden md:flex items-center gap-4">
+          <ModeToggle />
+          {isLoggedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/avatars/01.png" alt="Avatar" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuItem>
+                  <Link to="/users/profile" className="w-full h-full block">
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button variant="outline" size="sm">
+                  Log In
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button size="sm">Sign Up</Button>
+              </Link>
+            </>
+          )}
+        </div>
+
+        <div className="md:hidden">
+          <button
+            onClick={toggleMenu}
+            className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 focus:outline-none"
+          >
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-slate-200 max-h-[80vh] overflow-y-auto">
-          <div className="px-4 pt-2 pb-4 space-y-1">
+      {/* Mobile Menu */}
+      <div
+        className={`md:hidden ${isMenuOpen ? "block" : "hidden"} bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-2`}
+      >
+        <div className="container mx-auto px-4 flex flex-col gap-4">
+          {navItems.map((item) => (
             <Link
-              to="/properties"
-              className="block py-2 px-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-md"
-              onClick={() => setMobileMenuOpen(false)}
+              key={item.name}
+              to={item.path}
+              className="block text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors py-2"
             >
-              Buy
+              {item.name}
             </Link>
-            <Link
-              to="/lenders"
-              className="block py-2 px-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-md"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Lenders
-            </Link>
-            <Link
-              to="/services"
-              className="block py-2 px-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-md"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Services
-            </Link>
-            <Link
-              to="/driving-for-dollars"
-              className="block py-2 px-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-md"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Driving for Dollars
-            </Link>
-            <Link
-              to="/membership"
-              className="block py-2 px-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-md"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Plans
-            </Link>
-            <Link
-              to="/about"
-              className="block py-2 px-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-md"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              About
-            </Link>
-            <Link
-              to="/contact"
-              className="block py-2 px-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-md"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Contact
-            </Link>
-            <div className="pt-4 border-t border-slate-200">
-              {isLoggedIn ? (
-                <div className="flex space-x-2">
-                  <Link to="/saved" onClick={() => setMobileMenuOpen(false)} className="flex-1">
-                    <Button variant="outline" size="sm" className="w-full justify-center">
-                      <Heart className="h-4 w-4 mr-1" /> Saved
-                    </Button>
-                  </Link>
-                  <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="flex-1">
-                    <Button size="sm" className="w-full justify-center">
-                      <User className="h-4 w-4 mr-1" /> Profile
-                    </Button>
-                  </Link>
-                </div>
-              ) : (
-                <div className="flex space-x-2">
-                  <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="flex-1">
-                    <Button variant="outline" size="sm" className="w-full justify-center">
-                      <LogIn className="h-4 w-4 mr-1" /> Log In
-                    </Button>
-                  </Link>
-                  <Link to="/signup" onClick={() => setMobileMenuOpen(false)} className="flex-1">
-                    <Button size="sm" className="w-full justify-center">
-                      <User className="h-4 w-4 mr-1" /> Sign Up
-                    </Button>
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
+          ))}
+          <ModeToggle />
+          {isLoggedIn ? (
+            <>
+              <Link to="/users/profile" className="block text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors py-2">
+                Profile
+              </Link>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button variant="outline" size="sm">
+                  Log In
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button size="sm">Sign Up</Button>
+              </Link>
+            </>
+          )}
         </div>
-      )}
+      </div>
     </header>
   );
 };
